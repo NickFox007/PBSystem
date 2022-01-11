@@ -6,18 +6,24 @@ public Plugin myinfo =
 	name = "PBS Core",
 	author = "NickFox",
 	description = "ProgressBar System (Core)",
-	version = "0.1",
+	version = "0.2",
 	url = "https://vk.com/nf_dev"
 }
 
-bool g_bIsBusy[MAXPLAYERS+1];
+bool
+	g_bIsBusy[MAXPLAYERS+1];
 
-int m_flSimulationTime;
-int m_flProgressBarStartTime;
-int m_iProgressBarDuration;
-int m_iBlockingUseActionInProgress;
+int
+	m_flSimulationTime,
+	m_flProgressBarStartTime,
+	m_iProgressBarDuration,
+	m_iBlockingUseActionInProgress;
 
-int m_hBombDefuser;
+int
+	m_hBombDefuser;
+	
+Handle
+	g_hTimers[MAXPLAYERS+1];
 
 public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErr_max) 
 {
@@ -77,7 +83,7 @@ public bool ShowPB(int iClient, float fTime){
 	
 	SetInfoPB(iClient,fTime);
 	
-	CreateTimer(fTime,Timer_Reset,iClient);
+	g_hTimers[iClient] = CreateTimer(fTime,Timer_Reset,iClient);
 	
 	g_bIsBusy[iClient] = true;
 	return true;
@@ -94,6 +100,8 @@ public bool ResetPB(int iClient){
 	SetInfoPB(iClient,0.0);
 	
 	g_bIsBusy[iClient] = false;
+	
+	delete g_hTimers[iClient];
 	
 	return true;
 
